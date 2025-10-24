@@ -116,23 +116,25 @@ async def disconnect(sid):
     
     if sid in players:
         player = players[sid]
-        if player.room_id and player.room_id in rooms:
-            room = rooms[player.room_id]
+        room_id = player.room_id
+        
+        if room_id and room_id in rooms:
+            room = rooms[room_id]
             room.remove_player(sid)
             
             # Benachrichtige andere Spieler
             await sio.emit('player_left', {
                 'sid': sid,
                 'nickname': player.nickname
-            }, room=player.room_id)
+            }, room=room_id)
             
-            await sio.emit('room_update', {
-                'players': room.get_players_data()
-            }, room=player.room_id)
-            
-            # Lösche Raum wenn leer
-            if not room.players:
-                del rooms[player.room_id]
+            if room.players:
+                await sio.emit('room_update', {
+                    'players': room.get_players_data()
+                }, room=room_id)
+            else:
+                # Lösche Raum wenn leer
+                del rooms[room_id]
         
         del players[sid]
 
