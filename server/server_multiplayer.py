@@ -411,7 +411,7 @@ app.router.add_static('/js', os.path.join(CLIENT_DIR, 'js'))
 app.router.add_get('/favicon.ico', lambda r: web.FileResponse(os.path.join(CLIENT_DIR, 'favicon.ico')))
 app.router.add_get('/', index)
 
-# CORS für alle Routes
+# CORS für alle Routes (außer Socket.IO)
 cors = aiohttp_cors.setup(app, defaults={
     "*": aiohttp_cors.ResourceOptions(
         allow_credentials=True,
@@ -422,8 +422,15 @@ cors = aiohttp_cors.setup(app, defaults={
 })
 
 for route in list(app.router.routes()):
+    # Skip Socket.IO routes und Static Resources
     if not isinstance(route.resource, web.StaticResource):
-        cors.add(route)
+        if hasattr(route.resource, '_path'):
+            if not route.resource._path.startswith('/socket.io'):
+                try:
+                    cors.add(route)
+                except ValueError:
+                    # Route hat bereits CORS, skip
+                    pass
 
 if __name__ == '__main__':
     import os
