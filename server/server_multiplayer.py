@@ -165,8 +165,12 @@ async def create_room(sid, data):
     room_name = data.get('name', f'Room {room_id}')
     max_players = data.get('max_players', 4)
     map_type = data.get('map_type', 'classic')
+    game_time = data.get('game_time', 120)
+    monster_select_time = data.get('monster_select_time', 30)
     
     room = Room(room_id, sid, room_name, max_players, map_type)
+    room.game_time = game_time
+    room.monster_select_time = monster_select_time
     room.add_player(player)
     rooms[room_id] = room
     
@@ -289,7 +293,7 @@ async def start_game(sid, data):
     # Rollen zuweisen
     room.assign_roles()
     room.game_started = True
-    room.game_time = 90
+    # game_time bleibt beim vom Host gesetzten Wert
     room.caught_players = []
     
     # Starte Game Timer

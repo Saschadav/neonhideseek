@@ -68,6 +68,20 @@
                     <option value="classic">Classic</option>
                 </select>
             </div>
+            <div class="form-group">
+                <label>Spielzeit (Sekunden):</label>
+                <div class="slider-container">
+                    <input type="range" id="gameTimeSlider" min="60" max="300" value="120" class="menu-slider">
+                    <span id="gameTimeValue">120</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Monster-Auswahl-Zeit (Sekunden):</label>
+                <div class="slider-container">
+                    <input type="range" id="monsterSelectTimeSlider" min="10" max="60" value="30" class="menu-slider">
+                    <span id="monsterSelectTimeValue">30</span>
+                </div>
+            </div>
             <div class="menu-buttons">
                 <button class="menu-btn" id="confirmCreateRoomBtn">ERSTELLEN</button>
                 <button class="menu-btn secondary" id="backToLobbyBtn">ZURÜCK</button>

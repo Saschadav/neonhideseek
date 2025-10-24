@@ -75,14 +75,9 @@ export class MultiplayerHandler {
                 document.getElementById('seekerAbility').classList.remove('hidden');
                 document.getElementById('sprintBar').classList.add('hidden');
                 
-                // Monster Selection
-                this.game.monsterSelection.show(CONFIG.GAME.MONSTER_SELECTION_TIME, (monsterId) => {
-                    this.game.selectedMonster = monsterId;
-                    console.log('Monster gewählt:', monsterId);
-                    
-                    // Countdown starten
-                    this.startSeekerCountdown();
-                });
+                // KEINE Monster Selection mehr - direkt Countdown
+                const countdownTime = CONFIG.GAME.SEEKER_SPAWN_DELAY;
+                this.startSeekerCountdown(countdownTime);
             } else {
                 // Survivor: Sprint anzeigen, Ability verstecken
                 document.getElementById('seekerAbility').classList.add('hidden');
@@ -120,8 +115,8 @@ export class MultiplayerHandler {
         }, 3000);
     }
     
-    startSeekerCountdown() {
-        this.game.countdownRemaining = CONFIG.GAME.SEEKER_SPAWN_DELAY;
+    startSeekerCountdown(time = CONFIG.GAME.SEEKER_SPAWN_DELAY) {
+        this.game.countdownRemaining = time;
         this.game.isCountingDown = true;
         
         const countdownDisplay = document.getElementById('countdownDisplay');

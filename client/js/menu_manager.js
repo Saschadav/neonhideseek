@@ -60,6 +60,14 @@ export class MenuManager {
             document.getElementById('maxPlayersValue').textContent = e.target.value;
         });
         
+        document.getElementById('gameTimeSlider').addEventListener('input', (e) => {
+            document.getElementById('gameTimeValue').textContent = e.target.value;
+        });
+        
+        document.getElementById('monsterSelectTimeSlider').addEventListener('input', (e) => {
+            document.getElementById('monsterSelectTimeValue').textContent = e.target.value;
+        });
+        
         document.getElementById('confirmCreateRoomBtn').addEventListener('click', () => {
             this.createRoom();
         });
@@ -102,11 +110,15 @@ export class MenuManager {
         const roomName = document.getElementById('roomNameInput').value.trim() || 'Mein Raum';
         const maxPlayers = parseInt(document.getElementById('maxPlayersSlider').value);
         const mapType = document.getElementById('mapTypeSelect').value;
+        const gameTime = parseInt(document.getElementById('gameTimeSlider').value);
+        const monsterSelectTime = parseInt(document.getElementById('monsterSelectTimeSlider').value);
         
         this.game.multiplayer.createRoom({
             name: roomName,
             max_players: maxPlayers,
-            map_type: mapType
+            map_type: mapType,
+            game_time: gameTime,
+            monster_select_time: monsterSelectTime
         });
     }
     
