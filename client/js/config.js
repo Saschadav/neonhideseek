@@ -23,18 +23,22 @@ export const CONFIG = {
     // Seeker
     SEEKER: {
         RADIUS: 0.7,
-        SPEED: 7,
-        CHASE_SPEED: 14, // Etwas schneller als sprintender Spieler
+        SPEED: 15.6, // = Spieler Sprint-Geschwindigkeit (12 * 1.3)
+        CHASE_SPEED: 15.6, // Gleiche Geschwindigkeit
         VISION_RANGE: 20,
         VISION_ANGLE: Math.PI / 3,
         WAYPOINT_DURATION: 5000,
         PATROL_PAUSE: 500,
-        CATCH_DISTANCE: 1.5 // Fangreichweite
+        CATCH_DISTANCE: 1.5, // Fangreichweite
+        AURA_COOLDOWN: 40, // Sekunden
+        AURA_DURATION: 2 // Sekunden
     },
     
     // Game
     GAME: {
-        DURATION: 90
+        DURATION: 120, // 2 Minuten default
+        SEEKER_SPAWN_DELAY: 10, // Sekunden bis Seeker spawnt
+        MONSTER_SELECTION_TIME: 30 // Sekunden für Monster-Auswahl
     },
     
     // Visual - SICHTBARE NEON LINIEN

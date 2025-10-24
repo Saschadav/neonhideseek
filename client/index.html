@@ -109,10 +109,33 @@
     
     <!-- In-Game UI -->
     <div id="ui">
-        <div id="timer">90</div>
+        <div id="timer">120</div>
         <div id="crosshair"></div>
         
-        <!-- Sprint Bar -->
+        <!-- Rollenanzeige -->
+        <div id="roleDisplay" class="role-display hidden">
+            <div id="roleText"></div>
+        </div>
+        
+        <!-- Countdown -->
+        <div id="countdownDisplay" class="countdown-display hidden">
+            <div id="countdownText"></div>
+            <div id="countdownNumber"></div>
+        </div>
+        
+        <!-- Seeker Ability (nur für Seeker) -->
+        <div id="seekerAbility" class="seeker-ability hidden">
+            <div class="ability-content">
+                <div id="abilityIcon" class="ability-icon">👁️</div>
+                <div class="ability-info">
+                    <div class="ability-name">AURA-VISION</div>
+                    <div id="abilityCooldown" class="ability-cooldown">BEREIT</div>
+                </div>
+            </div>
+            <div class="ability-hint">Drücke [E]</div>
+        </div>
+        
+        <!-- Sprint Bar (nur für Survivor) -->
         <div id="sprintBar" class="sprint-bar">
             <div id="sprintFill" class="sprint-fill"></div>
             <span class="sprint-label">SPRINT</span>
@@ -121,6 +144,54 @@
         <div id="gameMessage">
             <div id="messageText"></div>
             <button id="restartButton">Zurück zum Raum</button>
+        </div>
+    </div>
+    
+    <!-- Monster Selection Screen -->
+    <div id="monsterSelectionMenu" class="menu hidden">
+        <div class="menu-container monster-select-container">
+            <h1 class="menu-title">WÄHLE DEINEN MONSTER</h1>
+            <div id="selectionTimeRemaining" class="selection-timer">Zeit: 30s</div>
+            
+            <div class="monsters-grid">
+                <div class="monster-card" data-monster="shadow">
+                    <div class="monster-preview">👹</div>
+                    <div class="monster-name">Shadow Hunter</div>
+                </div>
+                <div class="monster-card" data-monster="phantom">
+                    <div class="monster-preview">👻</div>
+                    <div class="monster-name">Phantom</div>
+                </div>
+                <div class="monster-card" data-monster="demon">
+                    <div class="monster-preview">😈</div>
+                    <div class="monster-name">Demon Lord</div>
+                </div>
+            </div>
+            
+            <div id="monsterDetails" class="monster-details hidden">
+                <div class="monster-display">
+                    <div id="monsterModel" class="monster-model">👹</div>
+                </div>
+                <div class="monster-info">
+                    <h2 id="monsterNameDetail"></h2>
+                    <p id="monsterDescription"></p>
+                    <div class="monster-stats">
+                        <div class="stat">
+                            <span class="stat-label">Geschwindigkeit:</span>
+                            <span id="monsterSpeed" class="stat-value"></span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Fähigkeit:</span>
+                            <span id="monsterAbility" class="stat-value"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-buttons">
+                <button class="menu-btn" id="confirmMonsterBtn">AUSWÄHLEN</button>
+                <button class="menu-btn secondary" id="randomMonsterBtn">RANDOM</button>
+            </div>
         </div>
     </div>
 

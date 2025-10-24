@@ -3,6 +3,8 @@ import { GameCore } from './game_core.js';
 import { MenuManager } from './menu_manager.js';
 import { MultiplayerManager } from './multiplayer.js';
 import { MultiplayerHandler } from './multiplayer_handler.js';
+import { SeekerAbility } from './seeker_ability.js';
+import { MonsterSelectionManager, MONSTERS } from './monster_selection.js';
 
 class Game {
     constructor() {
@@ -14,6 +16,12 @@ class Game {
         this.core = new GameCore();
         this.multiplayer = new MultiplayerManager();
         this.multiplayerHandler = new MultiplayerHandler(this);
+        this.seekerAbility = new SeekerAbility();
+        this.monsterSelection = new MonsterSelectionManager();
+        
+        this.countdownRemaining = 0;
+        this.isCountingDown = false;
+        this.selectedMonster = null;
         
         this.init();
     }
@@ -65,6 +73,17 @@ class Game {
                 const waitingMenu = document.getElementById('roomWaitingMenu');
                 if (!waitingMenu.classList.contains('hidden')) {
                     this.multiplayer.toggleRole();
+                }
+            }
+            
+            if (e.code === 'KeyE' && !e.repeat && this.isPlaying) {
+                // Seeker Ability
+                if (this.multiplayer.isSeeker() && this.gameMode === 'multiplayer') {
+                    if (this.seekerAbility.use()) {
+                        // Sende an Server dass Ability aktiviert wurde
+                        console.log('Ability aktiviert!');
+                        // TODO: Aura-Vision Effekt zeigen
+                    }
                 }
             }
             
