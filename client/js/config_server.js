@@ -2,10 +2,11 @@
 export const SERVER_CONFIG = {
     // Automatische Erkennung der Umgebung
     getMultiplayerServerUrl() {
-        // Wenn auf Netlify deployed
-        if (window.location.hostname.includes('netlify.app')) {
-            // Verwende deinen Render/Railway Server
-            return 'https://your-server-name.onrender.com'; // ÄNDERN!
+        // Wenn deployed (Netlify oder Render)
+        if (window.location.hostname.includes('netlify.app') || 
+            window.location.hostname.includes('onrender.com')) {
+            // Verwende deinen Render Server
+            return 'https://neonhideseek.onrender.com';
         }
         
         // Lokal
