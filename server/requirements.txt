@@ -1,0 +1,3 @@
+# Keine speziellen Pakete benötigt für Singleplayer Server
+# Python Standard Library ist ausreichend
+

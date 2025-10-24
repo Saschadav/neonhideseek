@@ -1,0 +1,13 @@
+# Render.com Konfiguration für Multiplayer Server
+services:
+  - type: web
+    name: neonhideseek-multiplayer
+    env: python
+    buildCommand: "pip install -r server/requirements_multiplayer.txt"
+    startCommand: "python server/server_multiplayer.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: PORT
+        value: 8080
+

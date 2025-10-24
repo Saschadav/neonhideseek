@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Neon Hide & Seek</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    
+    <!-- Hauptmenü -->
+    <div id="mainMenu" class="menu">
+        <div class="menu-container">
+            <h1 class="menu-title">NEON HIDE & SEEK</h1>
+            <div class="menu-buttons">
+                <button class="menu-btn" id="singleplayerBtn">SINGLEPLAYER</button>
+                <button class="menu-btn" id="multiplayerBtn">MULTIPLAYER</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nickname Eingabe -->
+    <div id="nicknameMenu" class="menu hidden">
+        <div class="menu-container">
+            <h1 class="menu-title">NICKNAME</h1>
+            <input type="text" id="nicknameInput" placeholder="Dein Name..." maxlength="15" class="menu-input">
+            <div class="menu-buttons">
+                <button class="menu-btn" id="confirmNicknameBtn">BESTÄTIGEN</button>
+                <button class="menu-btn secondary" id="backToMainBtn">ZURÜCK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multiplayer Lobby -->
+    <div id="lobbyMenu" class="menu hidden">
+        <div class="menu-container">
+            <h1 class="menu-title">LOBBY</h1>
+            <div class="menu-buttons">
+                <button class="menu-btn" id="createRoomBtn">RAUM ERSTELLEN</button>
+                <button class="menu-btn" id="joinRoomBtn">RAUM BEITRETEN</button>
+                <button class="menu-btn secondary" id="backToNicknameBtn">ZURÜCK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Raum erstellen -->
+    <div id="createRoomMenu" class="menu hidden">
+        <div class="menu-container">
+            <h1 class="menu-title">RAUM ERSTELLEN</h1>
+            <div class="form-group">
+                <label>Raumname:</label>
+                <input type="text" id="roomNameInput" placeholder="Mein Raum" maxlength="20" class="menu-input">
+            </div>
+            <div class="form-group">
+                <label>Max. Spieler:</label>
+                <div class="slider-container">
+                    <input type="range" id="maxPlayersSlider" min="2" max="15" value="4" class="menu-slider">
+                    <span id="maxPlayersValue">4</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Karte:</label>
+                <select id="mapTypeSelect" class="menu-select">
+                    <option value="classic">Classic</option>
+                </select>
+            </div>
+            <div class="menu-buttons">
+                <button class="menu-btn" id="confirmCreateRoomBtn">ERSTELLEN</button>
+                <button class="menu-btn secondary" id="backToLobbyBtn">ZURÜCK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Raum beitreten -->
+    <div id="joinRoomMenu" class="menu hidden">
+        <div class="menu-container">
+            <h1 class="menu-title">VERFÜGBARE RÄUME</h1>
+            <div id="roomsList" class="rooms-list">
+                <!-- Dynamisch gefüllt -->
+            </div>
+            <div class="menu-buttons">
+                <button class="menu-btn" id="refreshRoomsBtn">AKTUALISIEREN</button>
+                <button class="menu-btn secondary" id="backToLobbyBtn2">ZURÜCK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Raum Wartebereich -->
+    <div id="roomWaitingMenu" class="menu hidden">
+        <div class="menu-container">
+            <h1 class="menu-title" id="roomTitle">RAUM</h1>
+            <div id="playersList" class="players-list">
+                <!-- Dynamisch gefüllt -->
+            </div>
+            <div class="room-info">
+                <p>Drücke <span class="key">Q</span> um deine Rolle zu wählen</p>
+                <p class="role-hint">🔴 Seeker = Jäger | ⚪ Survivor = Verstecker</p>
+            </div>
+            <div class="menu-buttons">
+                <button class="menu-btn" id="startGameBtn">SPIEL STARTEN</button>
+                <button class="menu-btn secondary" id="leaveRoomBtn">RAUM VERLASSEN</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- In-Game UI -->
+    <div id="ui">
+        <div id="timer">90</div>
+        <div id="crosshair"></div>
+        
+        <!-- Sprint Bar -->
+        <div id="sprintBar" class="sprint-bar">
+            <div id="sprintFill" class="sprint-fill"></div>
+            <span class="sprint-label">SPRINT</span>
+        </div>
+        
+        <div id="gameMessage">
+            <div id="messageText"></div>
+            <button id="restartButton">Zurück zum Raum</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
