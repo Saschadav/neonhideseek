@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { CONFIG } from './config.js';
+import { MONSTERS } from './monster_selection.js';
 
 export class MultiplayerHandler {
     constructor(game) {
@@ -64,11 +65,86 @@ export class MultiplayerHandler {
         
         this.createOtherPlayerMeshes(data.players);
         
+        // Zeige Role Display
+        this.showRoleDisplay();
+        
+        // UI basierend auf Rolle anzeigen
         setTimeout(() => {
-            this.game.core.player.lock();
-        }, 100);
+            if (this.game.multiplayer.isSeeker()) {
+                // Seeker: Ability anzeigen, Sprint verstecken
+                document.getElementById('seekerAbility').classList.remove('hidden');
+                document.getElementById('sprintBar').classList.add('hidden');
+                
+                // Monster Selection
+                this.game.monsterSelection.show(CONFIG.GAME.MONSTER_SELECTION_TIME, (monsterId) => {
+                    this.game.selectedMonster = monsterId;
+                    console.log('Monster gewählt:', monsterId);
+                    
+                    // Countdown starten
+                    this.startSeekerCountdown();
+                });
+            } else {
+                // Survivor: Sprint anzeigen, Ability verstecken
+                document.getElementById('seekerAbility').classList.add('hidden');
+                document.getElementById('sprintBar').classList.remove('hidden');
+                
+                // Survivors können sofort spielen
+                setTimeout(() => {
+                    this.game.core.player.lock();
+                }, 2000);
+            }
+        }, 3000); // Nach Role Display
         
         console.log('Multiplayer Spiel gestartet! Rolle:', this.game.multiplayer.myRole);
+    }
+    
+    showRoleDisplay() {
+        const roleDisplay = document.getElementById('roleDisplay');
+        const roleText = document.getElementById('roleText');
+        
+        roleDisplay.classList.remove('hidden');
+        
+        if (this.game.multiplayer.isSeeker()) {
+            roleDisplay.classList.add('seeker');
+            roleDisplay.classList.remove('survivor');
+            roleText.textContent = 'SEEKER';
+        } else {
+            roleDisplay.classList.add('survivor');
+            roleDisplay.classList.remove('seeker');
+            roleText.textContent = 'SURVIVOR';
+        }
+        
+        // Ausblenden nach 3 Sekunden
+        setTimeout(() => {
+            roleDisplay.classList.add('hidden');
+        }, 3000);
+    }
+    
+    startSeekerCountdown() {
+        this.game.countdownRemaining = CONFIG.GAME.SEEKER_SPAWN_DELAY;
+        this.game.isCountingDown = true;
+        
+        const countdownDisplay = document.getElementById('countdownDisplay');
+        const countdownText = document.getElementById('countdownText');
+        const countdownNumber = document.getElementById('countdownNumber');
+        
+        countdownDisplay.classList.remove('hidden');
+        countdownText.textContent = 'Monster spawnt in...';
+        
+        const countdownInterval = setInterval(() => {
+            countdownNumber.textContent = this.game.countdownRemaining;
+            
+            this.game.countdownRemaining--;
+            
+            if (this.game.countdownRemaining < 0) {
+                clearInterval(countdownInterval);
+                countdownDisplay.classList.add('hidden');
+                this.game.isCountingDown = false;
+                
+                // Jetzt kann Seeker spielen
+                this.game.core.player.lock();
+            }
+        }, 1000);
     }
     
     createOtherPlayerMeshes(players) {

@@ -215,7 +215,12 @@ class Game {
         
         this.core.update(deltaTime);
         
-        if (!this.isPlaying || this.core.isPaused) {
+        // Update Seeker Ability wenn Seeker
+        if (this.gameMode === 'multiplayer' && this.multiplayer.isSeeker() && this.isPlaying) {
+            this.seekerAbility.update(deltaTime);
+        }
+        
+        if (!this.isPlaying || this.core.isPaused || this.isCountingDown) {
             return;
         }
         

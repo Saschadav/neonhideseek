@@ -357,6 +357,9 @@ async def game_timer_loop(room_id):
     while room_id in rooms:
         await asyncio.sleep(1)
         
+        if room_id not in rooms:
+            break
+            
         room = rooms[room_id]
         if not room.game_started:
             break
