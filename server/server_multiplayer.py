@@ -170,6 +170,7 @@ async def create_room(sid, data):
     
     room = Room(room_id, sid, room_name, max_players, map_type)
     room.game_time = game_time
+    room.original_game_time = game_time  # Store original for resets
     room.monster_select_time = monster_select_time
     room.add_player(player)
     rooms[room_id] = room
@@ -290,13 +291,17 @@ async def start_game(sid, data):
         await sio.emit('error', {'message': 'Mindestens 2 Spieler benötigt'}, room=sid)
         return
     
+    # Reset all players before starting
+    for p in room.players.values():
+        p.is_alive = True
+        p.is_ready = False
+    
     # Rollen zuweisen
     room.assign_roles()
     room.game_started = True
-    # game_time bleibt beim vom Host gesetzten Wert
     room.caught_players = []
     
-    # Starte Game Timer
+    # Starte Game Timer (mit 10 Sekunden Delay für Seeker Countdown)
     asyncio.create_task(game_timer_loop(room.room_id))
     
     await sio.emit('game_started', {
@@ -360,6 +365,9 @@ async def player_caught(sid, data):
 
 async def game_timer_loop(room_id):
     """Game Timer Loop"""
+    # Wait for seeker countdown (10 seconds)
+    await asyncio.sleep(10)
+    
     while room_id in rooms:
         await asyncio.sleep(1)
         
@@ -393,10 +401,16 @@ async def end_game(room_id, winner):
         'caught_players': room.caught_players
     }, room=room_id)
     
-    # Reset nach 5 Sekunden
-    await asyncio.sleep(5)
+    # Reset nach 3 Sekunden
+    await asyncio.sleep(3)
     
     if room_id in rooms:
+        room = rooms[room_id]
+        
+        # Reset room settings for next round
+        original_game_time = room.game_time if hasattr(room, 'original_game_time') else 120
+        room.game_time = getattr(room, 'original_game_time', 120)
+        
         # Reset alle Spieler
         for p in room.players.values():
             p.is_alive = True

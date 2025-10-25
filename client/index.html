@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,10 +15,11 @@
     <!-- Hauptmenü -->
     <div id="mainMenu" class="menu">
         <div class="menu-container">
-            <h1 class="menu-title">NEON HIDE & SEEK</h1>
+            <h1 class="menu-title" data-translate="title">NEON HIDE & SEEK</h1>
             <div class="menu-buttons">
-                <button class="menu-btn" id="singleplayerBtn">SINGLEPLAYER</button>
-                <button class="menu-btn" id="multiplayerBtn">MULTIPLAYER</button>
+                <button class="menu-btn" id="singleplayerBtn" data-translate="singleplayer">SINGLEPLAYER</button>
+                <button class="menu-btn" id="multiplayerBtn" data-translate="multiplayer">MULTIPLAYER</button>
+                <button class="menu-btn secondary" id="settingsBtn">⚙️ SETTINGS</button>
             </div>
         </div>
     </div>
@@ -26,11 +27,11 @@
     <!-- Nickname Eingabe -->
     <div id="nicknameMenu" class="menu hidden">
         <div class="menu-container">
-            <h1 class="menu-title">NICKNAME</h1>
-            <input type="text" id="nicknameInput" placeholder="Dein Name..." maxlength="15" class="menu-input">
+            <h1 class="menu-title" data-translate="nickname">NICKNAME</h1>
+            <input type="text" id="nicknameInput" placeholder="Your Name..." data-translate="yourName" maxlength="15" class="menu-input">
             <div class="menu-buttons">
-                <button class="menu-btn" id="confirmNicknameBtn">BESTÄTIGEN</button>
-                <button class="menu-btn secondary" id="backToMainBtn">ZURÜCK</button>
+                <button class="menu-btn" id="confirmNicknameBtn" data-translate="confirm">CONFIRM</button>
+                <button class="menu-btn secondary" id="backToMainBtn" data-translate="back">BACK</button>
             </div>
         </div>
     </div>
@@ -38,11 +39,11 @@
     <!-- Multiplayer Lobby -->
     <div id="lobbyMenu" class="menu hidden">
         <div class="menu-container">
-            <h1 class="menu-title">LOBBY</h1>
+            <h1 class="menu-title" data-translate="lobby">LOBBY</h1>
             <div class="menu-buttons">
-                <button class="menu-btn" id="createRoomBtn">RAUM ERSTELLEN</button>
-                <button class="menu-btn" id="joinRoomBtn">RAUM BEITRETEN</button>
-                <button class="menu-btn secondary" id="backToNicknameBtn">ZURÜCK</button>
+                <button class="menu-btn" id="createRoomBtn" data-translate="createRoom">CREATE ROOM</button>
+                <button class="menu-btn" id="joinRoomBtn" data-translate="joinRoom">JOIN ROOM</button>
+                <button class="menu-btn secondary" id="backToNicknameBtn" data-translate="back">BACK</button>
             </div>
         </div>
     </div>
@@ -50,41 +51,41 @@
     <!-- Raum erstellen -->
     <div id="createRoomMenu" class="menu hidden">
         <div class="menu-container">
-            <h1 class="menu-title">RAUM ERSTELLEN</h1>
+            <h1 class="menu-title" data-translate="createRoomTitle">CREATE ROOM</h1>
             <div class="form-group">
-                <label>Raumname:</label>
-                <input type="text" id="roomNameInput" placeholder="Mein Raum" maxlength="20" class="menu-input">
+                <label data-translate="roomName">Room Name:</label>
+                <input type="text" id="roomNameInput" placeholder="My Room" data-translate="myRoom" maxlength="20" class="menu-input">
             </div>
             <div class="form-group">
-                <label>Max. Spieler:</label>
+                <label data-translate="maxPlayers">Max. Players:</label>
                 <div class="slider-container">
                     <input type="range" id="maxPlayersSlider" min="2" max="15" value="4" class="menu-slider">
                     <span id="maxPlayersValue">4</span>
                 </div>
             </div>
             <div class="form-group">
-                <label>Karte:</label>
+                <label data-translate="map">Map:</label>
                 <select id="mapTypeSelect" class="menu-select">
-                    <option value="classic">Classic</option>
+                    <option value="classic" data-translate="classic">Classic</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>Spielzeit (Sekunden):</label>
+                <label data-translate="gameTime">Game Time (seconds):</label>
                 <div class="slider-container">
                     <input type="range" id="gameTimeSlider" min="60" max="300" value="120" class="menu-slider">
                     <span id="gameTimeValue">120</span>
                 </div>
             </div>
             <div class="form-group">
-                <label>Monster-Auswahl-Zeit (Sekunden):</label>
+                <label data-translate="monsterSelectTime">Monster Selection Time (seconds):</label>
                 <div class="slider-container">
-                    <input type="range" id="monsterSelectTimeSlider" min="10" max="60" value="30" class="menu-slider">
-                    <span id="monsterSelectTimeValue">30</span>
+                    <input type="range" id="monsterSelectTimeSlider" min="10" max="60" value="10" class="menu-slider">
+                    <span id="monsterSelectTimeValue">10</span>
                 </div>
             </div>
             <div class="menu-buttons">
-                <button class="menu-btn" id="confirmCreateRoomBtn">ERSTELLEN</button>
-                <button class="menu-btn secondary" id="backToLobbyBtn">ZURÜCK</button>
+                <button class="menu-btn" id="confirmCreateRoomBtn" data-translate="create">CREATE</button>
+                <button class="menu-btn secondary" id="backToLobbyBtn" data-translate="back">BACK</button>
             </div>
         </div>
     </div>
@@ -92,13 +93,13 @@
     <!-- Raum beitreten -->
     <div id="joinRoomMenu" class="menu hidden">
         <div class="menu-container">
-            <h1 class="menu-title">VERFÜGBARE RÄUME</h1>
+            <h1 class="menu-title" data-translate="availableRooms">AVAILABLE ROOMS</h1>
             <div id="roomsList" class="rooms-list">
                 <!-- Dynamisch gefüllt -->
             </div>
             <div class="menu-buttons">
-                <button class="menu-btn" id="refreshRoomsBtn">AKTUALISIEREN</button>
-                <button class="menu-btn secondary" id="backToLobbyBtn2">ZURÜCK</button>
+                <button class="menu-btn" id="refreshRoomsBtn" data-translate="refresh">REFRESH</button>
+                <button class="menu-btn secondary" id="backToLobbyBtn2" data-translate="back">BACK</button>
             </div>
         </div>
     </div>
@@ -106,17 +107,17 @@
     <!-- Raum Wartebereich -->
     <div id="roomWaitingMenu" class="menu hidden">
         <div class="menu-container">
-            <h1 class="menu-title" id="roomTitle">RAUM</h1>
+            <h1 class="menu-title" id="roomTitle" data-translate="room">ROOM</h1>
             <div id="playersList" class="players-list">
                 <!-- Dynamisch gefüllt -->
             </div>
             <div class="room-info">
-                <p>Drücke <span class="key">Q</span> um deine Rolle zu wählen</p>
-                <p class="role-hint">🔴 Seeker = Jäger | ⚪ Survivor = Verstecker</p>
+                <p><span data-translate="pressQ">Press</span> <span class="key">Q</span> <span data-translate="toChooseRole">to choose your role</span></p>
+                <p class="role-hint" data-translate="roleHint">🔴 Seeker = Hunter | ⚪ Survivor = Hider</p>
             </div>
             <div class="menu-buttons">
-                <button class="menu-btn" id="startGameBtn">SPIEL STARTEN</button>
-                <button class="menu-btn secondary" id="leaveRoomBtn">RAUM VERLASSEN</button>
+                <button class="menu-btn" id="startGameBtn" data-translate="startGame">START GAME</button>
+                <button class="menu-btn secondary" id="leaveRoomBtn" data-translate="leaveRoom">LEAVE ROOM</button>
             </div>
         </div>
     </div>
@@ -142,43 +143,43 @@
             <div class="ability-content">
                 <div id="abilityIcon" class="ability-icon">👁️</div>
                 <div class="ability-info">
-                    <div class="ability-name">AURA-VISION</div>
-                    <div id="abilityCooldown" class="ability-cooldown">BEREIT</div>
+                    <div class="ability-name" data-translate="auraVision">AURA-VISION</div>
+                    <div id="abilityCooldown" class="ability-cooldown" data-translate="ready">READY</div>
                 </div>
             </div>
-            <div class="ability-hint">Drücke [E]</div>
+            <div class="ability-hint" data-translate="pressE">Press [E]</div>
         </div>
         
         <!-- Sprint Bar (nur für Survivor) -->
         <div id="sprintBar" class="sprint-bar">
             <div id="sprintFill" class="sprint-fill"></div>
-            <span class="sprint-label">SPRINT</span>
+            <span class="sprint-label" data-translate="sprint">SPRINT</span>
         </div>
         
         <div id="gameMessage">
             <div id="messageText"></div>
-            <button id="restartButton">Zurück zum Raum</button>
+            <button id="restartButton" data-translate="backToRoom">Back to Room</button>
         </div>
     </div>
     
     <!-- Monster Selection Screen -->
     <div id="monsterSelectionMenu" class="menu hidden">
         <div class="menu-container monster-select-container">
-            <h1 class="menu-title">WÄHLE DEINEN MONSTER</h1>
-            <div id="selectionTimeRemaining" class="selection-timer">Zeit: 30s</div>
+            <h1 class="menu-title" data-translate="chooseMonster">CHOOSE YOUR MONSTER</h1>
+            <div id="selectionTimeRemaining" class="selection-timer"><span data-translate="time">Time:</span> 30s</div>
             
             <div class="monsters-grid">
                 <div class="monster-card" data-monster="shadow">
                     <div class="monster-preview">👹</div>
-                    <div class="monster-name">Shadow Hunter</div>
+                    <div class="monster-name" data-translate="shadowHunter">Shadow Hunter</div>
                 </div>
                 <div class="monster-card" data-monster="phantom">
                     <div class="monster-preview">👻</div>
-                    <div class="monster-name">Phantom</div>
+                    <div class="monster-name" data-translate="phantom">Phantom</div>
                 </div>
                 <div class="monster-card" data-monster="demon">
                     <div class="monster-preview">😈</div>
-                    <div class="monster-name">Demon Lord</div>
+                    <div class="monster-name" data-translate="demonLord">Demon Lord</div>
                 </div>
             </div>
             
@@ -191,11 +192,11 @@
                     <p id="monsterDescription"></p>
                     <div class="monster-stats">
                         <div class="stat">
-                            <span class="stat-label">Geschwindigkeit:</span>
+                            <span class="stat-label" data-translate="speed">Speed:</span>
                             <span id="monsterSpeed" class="stat-value"></span>
                         </div>
                         <div class="stat">
-                            <span class="stat-label">Fähigkeit:</span>
+                            <span class="stat-label" data-translate="ability">Ability:</span>
                             <span id="monsterAbility" class="stat-value"></span>
                         </div>
                     </div>
@@ -203,8 +204,26 @@
             </div>
             
             <div class="menu-buttons">
-                <button class="menu-btn" id="confirmMonsterBtn">AUSWÄHLEN</button>
-                <button class="menu-btn secondary" id="randomMonsterBtn">RANDOM</button>
+                <button class="menu-btn" id="confirmMonsterBtn" data-translate="select">SELECT</button>
+                <button class="menu-btn secondary" id="randomMonsterBtn" data-translate="random">RANDOM</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Menu -->
+    <div id="settingsMenu" class="menu hidden">
+        <div class="menu-container">
+            <h1 class="menu-title" data-translate="settings">SETTINGS</h1>
+            <div class="form-group">
+                <label data-translate="language">Language:</label>
+                <select id="languageSelect" class="menu-select">
+                    <option value="en" data-translate="english">English</option>
+                    <option value="de" data-translate="german">German</option>
+                </select>
+            </div>
+            <div class="menu-buttons">
+                <button class="menu-btn" id="applySettingsBtn" data-translate="apply">APPLY</button>
+                <button class="menu-btn secondary" id="backToMainFromSettingsBtn" data-translate="back">BACK</button>
             </div>
         </div>
     </div>

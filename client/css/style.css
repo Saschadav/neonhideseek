@@ -215,16 +215,17 @@ body.in-game {
 }
 
 .menu-btn.secondary {
-    border-color: #666;
-    color: #888;
-    text-shadow: none;
-    box-shadow: none;
+    border-color: #FF00FF;
+    color: #FF00FF;
+    text-shadow: 0 0 8px #FF00FF;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
 }
 
 .menu-btn.secondary:hover {
-    border-color: #888;
-    color: #AAA;
-    background: rgba(255, 255, 255, 0.05);
+    border-color: #FF00FF;
+    color: #FF00FF;
+    background: rgba(255, 0, 255, 0.15);
+    box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
 }
 
 .menu-input {

@@ -5,6 +5,7 @@ import { MultiplayerManager } from './multiplayer.js';
 import { MultiplayerHandler } from './multiplayer_handler.js';
 import { SeekerAbility } from './seeker_ability.js';
 import { MonsterSelectionManager, MONSTERS } from './monster_selection.js';
+import { LanguageManager } from './language.js';
 
 class Game {
     constructor() {
@@ -18,6 +19,7 @@ class Game {
         this.multiplayerHandler = new MultiplayerHandler(this);
         this.seekerAbility = new SeekerAbility();
         this.monsterSelection = new MonsterSelectionManager();
+        this.language = new LanguageManager();
         
         this.countdownRemaining = 0;
         this.isCountingDown = false;
@@ -40,6 +42,9 @@ class Game {
         this.menuManager = new MenuManager(this);
         this.multiplayerHandler.setupCallbacks();
         this.initEventListeners();
+        
+        // Initialize language
+        this.language.updateAllTexts();
         
         this.animate();
     }
@@ -80,9 +85,8 @@ class Game {
                 // Seeker Ability
                 if (this.multiplayer.isSeeker() && this.gameMode === 'multiplayer') {
                     if (this.seekerAbility.use()) {
-                        // Sende an Server dass Ability aktiviert wurde
-                        console.log('Ability aktiviert!');
-                        // TODO: Aura-Vision Effekt zeigen
+                        console.log('Ability aktiviert! Zeige Auras...');
+                        this.showSurvivorAuras();
                     }
                 }
             }
@@ -164,11 +168,11 @@ class Game {
     
     async connectMultiplayer() {
         const nicknameInput = document.getElementById('nicknameInput');
-        const nickname = nicknameInput.value.trim();
+        let nickname = nicknameInput.value.trim();
         
+        // Generate default nickname if empty
         if (!nickname) {
-            alert('Bitte gib einen Nickname ein!');
-            return;
+            nickname = `Player${Math.floor(Math.random() * 100) + 1}`;
         }
         
         try {
@@ -188,10 +192,10 @@ class Game {
         this.core.player.unlock();
         
         if (won) {
-            this.messageTextEl.textContent = 'ENTKOMMEN';
+            this.messageTextEl.textContent = this.language.get('escaped');
             this.gameMessageEl.className = 'win';
         } else {
-            this.messageTextEl.textContent = 'GEFANGEN';
+            this.messageTextEl.textContent = this.language.get('caught');
             this.gameMessageEl.className = 'lose';
         }
         
@@ -255,6 +259,29 @@ class Game {
     
     updateUI() {
         this.timerEl.textContent = Math.ceil(this.timeRemaining);
+    }
+    
+    showSurvivorAuras() {
+        // Zeige alle Survivor-Meshes mit erhöhter Helligkeit für die Dauer der Ability
+        if (this.gameMode === 'multiplayer') {
+            this.multiplayerHandler.otherPlayerMeshes.forEach((mesh, sid) => {
+                const player = this.multiplayer.players.get(sid);
+                if (player && player.role === 'survivor') {
+                    // Erhöhe Emissive Intensity für Aura-Effekt
+                    if (mesh.material) {
+                        const originalIntensity = mesh.material.emissiveIntensity;
+                        mesh.material.emissiveIntensity = 2.0;
+                        mesh.material.emissive.setHex(0xFFFF00); // Gelber Aura-Effekt
+                        
+                        // Nach Ability-Dauer zurücksetzen
+                        setTimeout(() => {
+                            mesh.material.emissiveIntensity = originalIntensity;
+                            mesh.material.emissive.setHex(0x00FF00); // Zurück zu Grün
+                        }, CONFIG.SEEKER.AURA_DURATION * 1000);
+                    }
+                }
+            });
+        }
     }
     
     animate() {

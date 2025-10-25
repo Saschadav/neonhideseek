@@ -12,7 +12,8 @@ export class MenuManager {
             lobby: document.getElementById('lobbyMenu'),
             createRoom: document.getElementById('createRoomMenu'),
             joinRoom: document.getElementById('joinRoomMenu'),
-            roomWaiting: document.getElementById('roomWaitingMenu')
+            roomWaiting: document.getElementById('roomWaitingMenu'),
+            settings: document.getElementById('settingsMenu')
         };
     }
     
@@ -24,6 +25,19 @@ export class MenuManager {
         
         document.getElementById('multiplayerBtn').addEventListener('click', () => {
             this.showMenu('nickname');
+        });
+        
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            this.showSettings();
+        });
+        
+        // Settings Menü
+        document.getElementById('applySettingsBtn').addEventListener('click', () => {
+            this.applySettings();
+        });
+        
+        document.getElementById('backToMainFromSettingsBtn').addEventListener('click', () => {
+            this.showMenu('main');
         });
         
         // Nickname Menü
@@ -107,7 +121,13 @@ export class MenuManager {
     }
     
     createRoom() {
-        const roomName = document.getElementById('roomNameInput').value.trim() || 'Mein Raum';
+        let roomName = document.getElementById('roomNameInput').value.trim();
+        
+        // Generate default room name if empty
+        if (!roomName) {
+            roomName = `Server${Math.floor(Math.random() * 100) + 1}`;
+        }
+        
         const maxPlayers = parseInt(document.getElementById('maxPlayersSlider').value);
         const mapType = document.getElementById('mapTypeSelect').value;
         const gameTime = parseInt(document.getElementById('gameTimeSlider').value);
@@ -127,7 +147,7 @@ export class MenuManager {
         roomsList.innerHTML = '';
         
         if (rooms.length === 0) {
-            roomsList.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Keine Räume verfügbar</p>';
+            roomsList.innerHTML = `<p style="color: #888; text-align: center; padding: 20px;">${this.game.language.get('noRooms')}</p>`;
             return;
         }
         
@@ -161,14 +181,14 @@ export class MenuManager {
             playerItem.className = 'player-item';
             
             let roleClass = 'survivor';
-            let roleText = 'Survivor';
+            let roleText = this.game.language.get('survivor');
             
             if (player.role === 'seeker') {
                 roleClass = 'seeker';
-                roleText = 'Seeker';
+                roleText = this.game.language.get('seeker');
             } else if (player.wants_seeker) {
                 roleClass = 'wants-seeker';
-                roleText = 'Möchte Seeker sein';
+                roleText = this.game.language.get('wantsSeeker');
             }
             
             playerItem.innerHTML = `
@@ -184,6 +204,19 @@ export class MenuManager {
         } else {
             startBtn.style.display = 'none';
         }
+    }
+    
+    showSettings() {
+        const languageSelect = document.getElementById('languageSelect');
+        languageSelect.value = this.game.language.getCurrentLanguage();
+        this.showMenu('settings');
+    }
+    
+    applySettings() {
+        const languageSelect = document.getElementById('languageSelect');
+        const selectedLanguage = languageSelect.value;
+        this.game.language.setLanguage(selectedLanguage);
+        this.showMenu('main');
     }
 }
 

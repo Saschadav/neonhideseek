@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { CONFIG } from './config.js';
 import { MONSTERS } from './monster_selection.js';
 
@@ -6,7 +7,25 @@ export class MultiplayerHandler {
     constructor(game) {
         this.game = game;
         this.otherPlayerMeshes = new Map();
+        this.playerLabels = new Map();
         this.positionUpdateTimer = 0;
+        this.labelRenderer = null;
+        
+        this.initLabelRenderer();
+    }
+    
+    initLabelRenderer() {
+        this.labelRenderer = new CSS2DRenderer();
+        this.labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        this.labelRenderer.domElement.style.position = 'absolute';
+        this.labelRenderer.domElement.style.top = '0px';
+        this.labelRenderer.domElement.style.pointerEvents = 'none';
+        document.body.appendChild(this.labelRenderer.domElement);
+        
+        // Update on window resize
+        window.addEventListener('resize', () => {
+            this.labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        });
     }
     
     setupCallbacks() {
@@ -75,18 +94,18 @@ export class MultiplayerHandler {
                 document.getElementById('seekerAbility').classList.remove('hidden');
                 document.getElementById('sprintBar').classList.add('hidden');
                 
-                // KEINE Monster Selection mehr - direkt Countdown
-                const countdownTime = CONFIG.GAME.SEEKER_SPAWN_DELAY;
+                // Seeker countdown - Zeit um Survivors Start-Vorsprung zu geben
+                const countdownTime = 10; // 10 Sekunden Vorsprung für Survivors
                 this.startSeekerCountdown(countdownTime);
             } else {
                 // Survivor: Sprint anzeigen, Ability verstecken
                 document.getElementById('seekerAbility').classList.add('hidden');
                 document.getElementById('sprintBar').classList.remove('hidden');
                 
-                // Survivors können sofort spielen
+                // Survivors starten sofort
                 setTimeout(() => {
                     this.game.core.player.lock();
-                }, 2000);
+                }, 1000);
             }
         }, 3000); // Nach Role Display
         
@@ -115,7 +134,7 @@ export class MultiplayerHandler {
         }, 3000);
     }
     
-    startSeekerCountdown(time = CONFIG.GAME.SEEKER_SPAWN_DELAY) {
+    startSeekerCountdown(time = 10) {
         this.game.countdownRemaining = time;
         this.game.isCountingDown = true;
         
@@ -124,7 +143,7 @@ export class MultiplayerHandler {
         const countdownNumber = document.getElementById('countdownNumber');
         
         countdownDisplay.classList.remove('hidden');
-        countdownText.textContent = 'Monster spawnt in...';
+        countdownText.textContent = this.game.language.get('seekerSpawnsIn');
         
         const countdownInterval = setInterval(() => {
             countdownNumber.textContent = this.game.countdownRemaining;
@@ -143,10 +162,15 @@ export class MultiplayerHandler {
     }
     
     createOtherPlayerMeshes(players) {
+        // Clean up old meshes and labels
         this.otherPlayerMeshes.forEach(mesh => {
             this.game.core.scene.remove(mesh);
         });
+        this.playerLabels.forEach(label => {
+            this.game.core.scene.remove(label);
+        });
         this.otherPlayerMeshes.clear();
+        this.playerLabels.clear();
         
         players.forEach(player => {
             if (player.sid === this.game.multiplayer.socket.id) return;
@@ -168,6 +192,25 @@ export class MultiplayerHandler {
             mesh.position.set(0, 0.9, 0);
             this.game.core.scene.add(mesh);
             this.otherPlayerMeshes.set(player.sid, mesh);
+            
+            // Create nickname label
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'player-label';
+            labelDiv.textContent = player.nickname;
+            labelDiv.style.color = isSeeker ? '#FF0000' : '#00FFFF';
+            labelDiv.style.fontFamily = 'Courier New, monospace';
+            labelDiv.style.fontSize = '14px';
+            labelDiv.style.fontWeight = 'bold';
+            labelDiv.style.textShadow = '0 0 5px currentColor, 0 0 10px currentColor';
+            labelDiv.style.padding = '2px 6px';
+            labelDiv.style.background = 'rgba(0, 0, 0, 0.7)';
+            labelDiv.style.borderRadius = '3px';
+            labelDiv.style.whiteSpace = 'nowrap';
+            
+            const label = new CSS2DObject(labelDiv);
+            label.position.set(0, 2.5, 0); // Above player
+            mesh.add(label);
+            this.playerLabels.set(player.sid, label);
         });
     }
     
@@ -201,6 +244,11 @@ export class MultiplayerHandler {
                 }
             });
         }
+        
+        // Render labels
+        if (this.labelRenderer && this.game.isPlaying) {
+            this.labelRenderer.render(this.game.core.scene, this.game.core.camera);
+        }
     }
     
     endGame(data) {
@@ -208,14 +256,17 @@ export class MultiplayerHandler {
         this.game.gameOver = true;
         this.game.core.player.unlock();
         
+        // Reset seeker ability
+        this.game.seekerAbility.reset();
+        
         const won = (data.winner === 'survivors' && this.game.multiplayer.isSurvivor()) ||
                      (data.winner === 'seeker' && this.game.multiplayer.isSeeker());
         
         if (won) {
-            this.game.messageTextEl.textContent = 'GEWONNEN!';
+            this.game.messageTextEl.textContent = this.game.language.get('won');
             this.game.gameMessageEl.className = 'win';
         } else {
-            this.game.messageTextEl.textContent = 'VERLOREN';
+            this.game.messageTextEl.textContent = this.game.language.get('lost');
             this.game.gameMessageEl.className = 'lose';
         }
         
@@ -224,7 +275,7 @@ export class MultiplayerHandler {
     
     onCaught() {
         this.game.core.player.unlock();
-        this.game.messageTextEl.textContent = 'GEFANGEN!';
+        this.game.messageTextEl.textContent = this.game.language.get('caught');
         this.game.gameMessageEl.className = 'lose';
         this.game.gameMessageEl.style.display = 'block';
     }
