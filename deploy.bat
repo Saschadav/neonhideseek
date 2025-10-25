@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo   Neon Hide & Seek - Render Deploy
+echo   Neon Hide ^& Seek - Render Deploy
 echo ========================================
 echo.
 
