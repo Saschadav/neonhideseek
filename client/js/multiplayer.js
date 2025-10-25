@@ -23,9 +23,13 @@ export class MultiplayerManager {
     
     connect(serverUrl = MULTIPLAYER_SERVER_URL) {
         return new Promise((resolve, reject) => {
+            console.log('Connecting to server:', serverUrl);
             this.socket = io(serverUrl, {
-                transports: ['websocket'],
-                reconnection: true
+                transports: ['websocket', 'polling'],
+                reconnection: true,
+                reconnectionAttempts: 5,
+                reconnectionDelay: 1000,
+                timeout: 20000
             });
             
             this.socket.on('connect', () => {
@@ -37,11 +41,12 @@ export class MultiplayerManager {
             
             this.socket.on('connect_error', (error) => {
                 console.error('Verbindungsfehler:', error);
+                console.error('Server URL:', serverUrl);
                 reject(error);
             });
             
-            this.socket.on('disconnect', () => {
-                console.log('Vom Server getrennt');
+            this.socket.on('disconnect', (reason) => {
+                console.log('Vom Server getrennt:', reason);
                 this.isConnected = false;
             });
         });

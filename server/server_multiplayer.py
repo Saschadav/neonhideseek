@@ -14,7 +14,9 @@ sio = socketio.AsyncServer(
     async_mode='aiohttp',
     cors_allowed_origins='*',
     ping_timeout=60,
-    ping_interval=25
+    ping_interval=25,
+    logger=True,
+    engineio_logger=True
 )
 app = web.Application()
 sio.attach(app)
@@ -459,5 +461,6 @@ if __name__ == '__main__':
     import os
     PORT = int(os.environ.get('PORT', 8080))
     print(f"Multiplayer Server läuft auf Port {PORT}")
+    print(f"WebSocket URL: wss://neonhideseek.onrender.com/socket.io/")
     web.run_app(app, host='0.0.0.0', port=PORT)
 
